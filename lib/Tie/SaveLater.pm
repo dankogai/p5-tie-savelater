@@ -1,10 +1,10 @@
 #
-# $Id: SaveLater.pm,v 0.4 2006/03/23 04:36:36 dankogai Exp dankogai $
+# $Id: SaveLater.pm,v 0.05 2020/08/05 18:26:03 dankogai Exp dankogai $
 #
 package Tie::SaveLater;
 use strict;
 use warnings;
-our $VERSION = sprintf "%d.%02d", q$Revision: 0.4 $ =~ /(\d+)/g;
+our $VERSION = sprintf "%d.%02d", q$Revision: 0.05 $ =~ /(\d+)/g;
 use Carp;
 our $DEBUG = 0;
 my (%OBJ2FN, %FN2OBJ, %OPTIONS);
