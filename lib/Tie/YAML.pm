@@ -10,7 +10,9 @@ use Carp;
 use YAML;
 __PACKAGE__->make_subclasses;
 
-sub load{ 
+sub load{
+    # See https://rt.cpan.org/Public/Bug/Display.html?id=131985
+    local $YAML::LoadBlessed = 1;
     my $class = shift;
     my $filename = shift; 
     open my $fh, "<:raw", $filename or croak "$filename: $!";
