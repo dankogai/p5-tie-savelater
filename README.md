@@ -80,7 +80,7 @@ the following;
     Here is a more descriptive way to define Tie::Storable::load().
 
     ```perl
-    sub load{
+    sub load {
       my $class    = shift;
       my $filename = shift;
       return retrieve($filename) 
@@ -95,7 +95,7 @@ the following;
     Here is a more descriptive way to define Tie::Storable::save().
 
     ```perl
-    sub save{ 
+    sub save { 
         my $self = shift;
         my $filename = $self->filename;
         return nstore($self, $filename);
