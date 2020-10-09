@@ -128,7 +128,7 @@ None by default.
 
 # AUTHOR
 
-Dan Kogai, <dankogai@cpan.org>
+Dan Kogai, `<dankogai at cpan.org>`
 
 # COPYRIGHT AND LICENSE
 
