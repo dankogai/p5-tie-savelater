@@ -7,81 +7,87 @@ use warnings;
 our $VERSION = sprintf "%d.%02d", q$Revision: 0.05 $ =~ /(\d+)/g;
 use Carp;
 our $DEBUG = 0;
-my (%OBJ2FN, %FN2OBJ, %OPTIONS);
+my ( %OBJ2FN, %FN2OBJ, %OPTIONS );
 
-sub make_subclasses{
+sub make_subclasses {
     my $pkg = shift;
-    for my $type (qw/SCALAR ARRAY HASH/){
-	my $class = $pkg; my $Type = ucfirst(lc $type);
-	eval qq{ package $class\:\:$type;
+    for my $type (qw/SCALAR ARRAY HASH/) {
+        my $class = $pkg;
+        my $Type  = ucfirst( lc $type );
+        eval qq{ package $class\:\:$type;
 		 require Tie\:\:$Type;
 	     push our \@ISA, qw($class Tie\:\:Std$Type); };
-	$@ and croak $@;
+        $@ and croak $@;
     }
 }
 
-sub load { my $class = shift; croak "$class, please implement load()!" }
-sub save { my $class  = ref shift; croak "$class, please implement save()!" }
+sub load { my $class = shift;     croak "$class, please implement load()!" }
+sub save { my $class = ref shift; croak "$class, please implement save()!" }
 
-sub options{
+sub options {
     my $self = shift;
-    @_ and $OPTIONS{0+$self} = [ @_ ];
-    return $OPTIONS{0+$self} ? @{ $OPTIONS{0+$self} } : ();
+    @_ and $OPTIONS{ 0 + $self } = [@_];
+    return $OPTIONS{ 0 + $self } ? @{ $OPTIONS{ 0 + $self } } : ();
 }
 
-sub super_super{
+sub super_super {
     my $self = shift;
     my $name = shift;
     no strict 'refs';
-    &{ ${ref($self) . "::ISA"}[1] . "::$name"}($self, @_);
+    &{ ${ ref($self) . "::ISA" }[1] . "::$name" }( $self, @_ );
 }
 
-sub TIEHASH  { return shift->TIE('HASH'   => @_) };
-sub TIEARRAY { return shift->TIE('ARRAY'  => @_) };
-sub TIESCALAR{ return shift->TIE('SCALAR' => @_) };
+sub TIEHASH   { return shift->TIE( 'HASH'   => @_ ) }
+sub TIEARRAY  { return shift->TIE( 'ARRAY'  => @_ ) }
+sub TIESCALAR { return shift->TIE( 'SCALAR' => @_ ) }
 
 my %types2check = map { $_ => 1 } qw/HASH ARRAY/;
-sub TIE{
-    my $class = shift;
-    my $type = shift;
+
+sub TIE {
+    my $class    = shift;
+    my $type     = shift;
     my $filename = shift or croak "filename missing";
     my $self;
-    if (-f $filename){
-	$self = $class->load($filename) or croak "$filename : $!";
-	croak "existing $filename does not store $type"
-	    if $types2check{$type} and !$self->isa($type);
-    }else{
-	$self = 
-	    { HASH => {}, ARRAY => [], SCALAR => \do{ my $scalar }}->{$type};
+    if ( -f $filename ) {
+        $self = $class->load($filename) or croak "$filename : $!";
+        croak "existing $filename does not store $type"
+          if $types2check{$type} and !$self->isa($type);
     }
-    bless $self => $class.'::'.$type;
-    $DEBUG and carp sprintf("tied $filename => 0x%x", 0+$self);
-    @_ and $self->options(@_);
+    else {
+        $self = {
+            HASH   => {},
+            ARRAY  => [],
+            SCALAR => \do { my $scalar }
+        }->{$type};
+    }
+    bless $self => $class . '::' . $type;
+    $DEBUG and carp sprintf( "tied $filename => 0x%x", 0 + $self );
+    @_     and $self->options(@_);
     $self->_regobj($filename);
     $self;
 }
 
-sub UNTIE{
+sub UNTIE {
     my $self = shift;
     $self->save;
     $DEBUG and carp "untied ", $self->filename;
     $self->_unregobj();
 }
 
-sub DESTROY{ shift->UNTIE }
+sub DESTROY { shift->UNTIE }
 
-sub filename{ $OBJ2FN{ 0+shift } }
+sub filename { $OBJ2FN{ 0 + shift } }
 
-sub _regobj{
-    $OBJ2FN{0+$_[0]} = $_[1];
-    $FN2OBJ{$_[1]} = 0+$_[0]; 
+sub _regobj {
+    $OBJ2FN{ 0 + $_[0] } = $_[1];
+    $FN2OBJ{ $_[1] } = 0 + $_[0];
     return;
 }
 
-sub _unregobj{
-    delete $FN2OBJ{ $OBJ2FN{ 0+$_[0] } }; 
-    delete $OPTIONS{ 0+$_[0] }; 
-    delete $OBJ2FN{ 0+$_[0] }; 
+sub _unregobj {
+    delete $FN2OBJ{ $OBJ2FN{ 0 + $_[0] } };
+    delete $OPTIONS{ 0 + $_[0] };
+    delete $OBJ2FN{ 0 + $_[0] };
     return;
 }
 
@@ -169,11 +175,11 @@ and I<Tie::Them::>HASH for you.
 
 Here is a more descriptive way to define Tie::Storable::load().
 
-   sub load{
-     my $class    = shift;
-     my $filename = shift;
-     return retrieve($filename) 
-   };
+  sub load {
+    my $class    = shift;
+    my $filename = shift;
+    return retrieve($filename);
+  }
 
 First argument is a class name (you don't need that in this case) and
 the second argument is the filename.  It must return a loaded object.
@@ -182,11 +188,11 @@ the second argument is the filename.  It must return a loaded object.
 
 Here is a more descriptive way to define Tie::Storable::save().
 
-  sub save{ 
-      my $self = shift;
-      my $filename = $self->filename;
-      return nstore($self, $filename);
-  };
+  sub save {
+    my $self     = shift;
+    my $filename = $self->filename;
+    return nstore( $self, $filename );
+  }
 
 It takes only one argument -- C<$self>.  And you can obtain the
 filename as C<< $self->filename >>.  

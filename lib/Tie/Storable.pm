@@ -9,8 +9,8 @@ our $VERSION = sprintf "%d.%02d", q$Revision: 0.05 $ =~ /(\d+)/g;
 use Storable ();
 use Carp;
 __PACKAGE__->make_subclasses;
-sub load{ Storable::retrieve($_[1]) };
-sub save{ Storable::nstore($_[0], $_[0]->filename) };
+sub load { Storable::retrieve( $_[1] ) }
+sub save { Storable::nstore( $_[0], $_[0]->filename ) }
 
 ####
 package Tie::Storable::More;
@@ -18,25 +18,25 @@ use base 'Tie::SaveLater';
 use Carp;
 __PACKAGE__->make_subclasses;
 
-sub load{ 
-    my ($class, $filename) = @_;
-    return Storable::retrieve($filename)
-};
+sub load {
+    my ( $class, $filename ) = @_;
+    return Storable::retrieve($filename);
+}
 
-sub save{
+sub save {
     my $self = shift;
-    if (my @options = $self->options){
-	return 1 unless ($options[0] & 0222); # do nothing if read-only
+    if ( my @options = $self->options ) {
+        return 1 unless ( $options[0] & 0222 );    # do nothing if read-only
     }
-    return Storable::nstore($self, $self->filename) 
-};
+    return Storable::nstore( $self, $self->filename );
+}
 
-sub STORE{
+sub STORE {
     my $self = shift;
-    if (my @options = $self->options){
-	croak "This variable is read-only!" unless ($options[0] & 0222);
+    if ( my @options = $self->options ) {
+        croak "This variable is read-only!" unless ( $options[0] & 0222 );
     }
-    return $self->super_super('STORE' => @_);
+    return $self->super_super( 'STORE' => @_ );
 }
 
 1;

@@ -9,27 +9,29 @@ use base 'Tie::SaveLater';
 use Carp;
 use Data::Dumper;
 __PACKAGE__->make_subclasses;
-sub load{ 
-    my $class = shift;
-    my $filename = shift; 
+
+sub load {
+    my $class    = shift;
+    my $filename = shift;
     open my $fh, "<:raw", $filename or croak "$filename: $!";
-    local $/; # slurp;
+    local $/;    # slurp;
     my $str = <$fh>;
     close $fh;
-    our $VAR1; # for data::dumper;
+    our $VAR1;    # for data::dumper;
     my $result = eval($str);
     $@ and croak $@;
     undef $VAR1;
     return $result;
 }
-sub save{
-    my $self = shift;
+
+sub save {
+    my $self     = shift;
     my $filename = $self->filename;
     open my $fh, ">:raw", $filename or croak "$filename: $!";
     print $fh Dumper($self);
     close $fh;
     return 1;
-} 
+}
 1;
 __END__
 

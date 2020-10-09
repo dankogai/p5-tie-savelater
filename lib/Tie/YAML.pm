@@ -10,30 +10,31 @@ use Carp;
 use YAML;
 __PACKAGE__->make_subclasses;
 
-sub load{
+sub load {
+
     # See https://rt.cpan.org/Public/Bug/Display.html?id=131985
     local $YAML::LoadBlessed = 1;
-    my $class = shift;
-    my $filename = shift; 
+    my $class    = shift;
+    my $filename = shift;
     open my $fh, "<:raw", $filename or croak "$filename: $!";
-    local $/; # slurp;
+    local $/;    # slurp;
     my $yaml = <$fh>;
     close $fh;
     return Load($yaml);
 }
 
-sub save{
-    my $self = shift;
+sub save {
+    my $self     = shift;
     my $filename = $self->filename;
     open my $fh, ">:raw", $filename or croak "$filename: $!";
-    print $fh Dump(damn_scalar($self));
+    print $fh Dump( damn_scalar($self) );
     close $fh;
     return 1;
-} 
+}
 
-sub damn_scalar { # iff necessary
-    return $_[0] unless ref($_[0]) =~ /::SCALAR$/;
-    return \do{ my $scalar = ${ $_[0] }}
+sub damn_scalar {    # iff necessary
+    return $_[0] unless ref( $_[0] ) =~ /::SCALAR$/;
+    return \do { my $scalar = ${ $_[0] } }
 }
 1;
 __END__
