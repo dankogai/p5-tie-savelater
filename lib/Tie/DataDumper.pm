@@ -35,7 +35,7 @@ __END__
 
 =head1 NAME
 
-Tie::DataDumper - Stores your object when untied via DataDumper
+Tie::DataDumper - Stores your object when untied via Data::Dumper
 
 =head1 SYNOPSIS
 
@@ -70,8 +70,8 @@ when you variable is out of scope.  You can of course explicitly untie
 the variable or C<< tied($variable)->save >> but the whole idea is not
 to forget to save it.
 
-This module uses L<DataDumper> as its backend so it can store and
-retrieve anything that L<DataDumper> can.
+This module uses L<Data::Dumper> as its backend so it can store and
+retrieve anything that L<Data::Dumper> can.
 
 =head1 SECURITY
 
@@ -89,11 +89,11 @@ L<perltie>, L<Tie::Scalar>, L<Tie::Array>, L<Tie::Hash>
 
 =head1 AUTHOR
 
-Dan Kogai, E<lt>dankogai@dan.co.jpE<gt>
+Dan Kogai, C<< <dankogai at cpan.org > >>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2006 by Dan Kogai
+Copyright (C) 2006-2020 by Dan Kogai
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.8 or,
