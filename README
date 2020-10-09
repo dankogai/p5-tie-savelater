@@ -109,7 +109,7 @@ SEE ALSO
     Tie::Storable, Tie::YAML, Tie::DataDumper
 
 AUTHOR
-    Dan Kogai, <dankogai@cpan.org>
+    Dan Kogai, "<dankogai at cpan.org >"
 
 COPYRIGHT AND LICENSE
     Copyright (C) 2006-2020 by Dan Kogai

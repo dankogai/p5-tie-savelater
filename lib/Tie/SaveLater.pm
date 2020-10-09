@@ -214,7 +214,7 @@ L<Tie::Storable>, L<Tie::YAML>, L<Tie::DataDumper>
 
 =head1 AUTHOR
 
-Dan Kogai, E<lt>dankogai@cpan.orgE<gt>
+Dan Kogai, C<< <dankogai at cpan.org > >>
 
 =head1 COPYRIGHT AND LICENSE
 
